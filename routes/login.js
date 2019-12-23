@@ -32,7 +32,7 @@ app.post('/', (req, res) => {
 
 		res.status(201).json({
             ok: true,
-            Usuario:usuarioDB,
+            usuario:usuarioDB,
             id: usuarioDB._id
 		});
 	});
