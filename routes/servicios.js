@@ -56,4 +56,29 @@ app.post('/', (req, res) => {
     });
 });
 
+// ====================================
+// Obtener  los servicios por categoria
+// ====================================
+app.get('/:categoria', (req, res, next) => {
+
+	var categoria = req.params.categoria;
+
+
+	Servicio.find({categoria: categoria}).exec((err, servicios) => {
+		if (err) {
+			return res.status(500).json({
+				ok: false,
+				mensaje: 'Error en la base de datos',
+				errors: err,
+			});
+		}
+
+		res.status(200).json({
+			ok: true,
+			servicios: servicios,
+		});
+	});
+});
+
+
 module.exports = app;
