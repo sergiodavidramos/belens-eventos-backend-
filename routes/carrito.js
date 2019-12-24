@@ -2,15 +2,18 @@ var express = require('express');
 
 var app = express();
 
-var Usuario = require('../models/usuario');
+var Carrito = require('../models/carrito');
 
 // Rutas
 
 // ====================================
-// Obtener todos los usuarios
+// Obtener todos los servicios añadidos al carrito
 // ====================================
 app.get('/', (req, res, next) => {
-	Usuario.find({}, 'nombre email telefono').exec((err, usuarios) => {
+	Carrito.find({})
+    .populate('servicios','nombre')
+    .populate('usuario','nombre')
+	.exec((err, det) => {
 		if (err) {
 			return res.status(500).json({
 				ok: false,
@@ -21,36 +24,35 @@ app.get('/', (req, res, next) => {
 
 		res.status(200).json({
 			ok: true,
-			usuarios: usuarios,
+			detalle: det,
 		});
 	});
 });
 
 // ====================================
-// Crear un nuevo usuario
+// Crear un nuevo servicios añadidos al carrito
 // ====================================
 
 app.post('/', (req, res) => {
 	var body = req.body;
 
-	var usuario = new Usuario({
-		nombre: body.nombre,
-		email: body.email,
-		password: body.password,
-		telefono: body.telefono
+	var carrito = new Carrito({
+		usuario: body.usuario,
+		servicios: body.servicios,
 	});
 
-	usuario.save((err, usuarioGuardado) => {
+	carrito.save((err, carritoGuardado) => {    
 		if (err) {
 			return res.status(500).json({
 				ok: false,
-				mensaje: 'Error al crear al usuario',
+				mensaje: 'Error al crear la promocion',
 				errors: err,
 			});
         }
         res.status(201).json({
             ok: true,
-            usuario: usuarioGuardado
+			detalle: carritoGuardado,
+			// servicios: body.servicios
         });
 
     });

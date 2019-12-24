@@ -28,6 +28,8 @@ var paqueteRoutes = require('./routes/paquetes');
 var servicioRoutes = require('./routes/servicios');
 var uploadRoutes = require('./routes/upload');
 var imagesRoutes = require('./routes/imagenes');
+var promoRoutes = require('./routes/promos');
+var carritoRoutes = require('./routes/carrito');
 
 
 // Conexion a la base de datos
@@ -39,6 +41,8 @@ mongoose.connection.openUri('mongodb://localhost:27017/dbAgencia', (err, res)=>{
 
 
 //Rutas
+app.use('/carrito', carritoRoutes)
+app.use('/promo', promoRoutes)
 app.use('/img', imagesRoutes)
 app.use('/upload', uploadRoutes)
 app.use('/servicio', servicioRoutes)

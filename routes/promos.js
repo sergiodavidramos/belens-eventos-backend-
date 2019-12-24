@@ -2,15 +2,17 @@ var express = require('express');
 
 var app = express();
 
-var Usuario = require('../models/usuario');
+var Promo = require('../models/promociones');
 
 // Rutas
 
 // ====================================
-// Obtener todos los usuarios
+// Obtener todos los paquetes
 // ====================================
 app.get('/', (req, res, next) => {
-	Usuario.find({}, 'nombre email telefono').exec((err, usuarios) => {
+	Promo.find({})
+	.populate('servicios','nombre detalle precio')
+	.exec((err, promos) => {
 		if (err) {
 			return res.status(500).json({
 				ok: false,
@@ -21,36 +23,38 @@ app.get('/', (req, res, next) => {
 
 		res.status(200).json({
 			ok: true,
-			usuarios: usuarios,
+			promo: promos,
 		});
 	});
 });
 
 // ====================================
-// Crear un nuevo usuario
+// Crear un nuevo paquete
 // ====================================
 
 app.post('/', (req, res) => {
 	var body = req.body;
 
-	var usuario = new Usuario({
+	var promo = new Promo({
 		nombre: body.nombre,
-		email: body.email,
-		password: body.password,
-		telefono: body.telefono
+		servicios: body.servicios,
+        total_antes: body.total_antes,
+        precio: body.precio,
+        fecha: body.fecha
 	});
 
-	usuario.save((err, usuarioGuardado) => {
+	promo.save((err, promoGuardado) => {    
 		if (err) {
 			return res.status(500).json({
 				ok: false,
-				mensaje: 'Error al crear al usuario',
+				mensaje: 'Error al crear la promocion',
 				errors: err,
 			});
         }
         res.status(201).json({
             ok: true,
-            usuario: usuarioGuardado
+			promo: promoGuardado,
+			servicios: body.servicios
         });
 
     });

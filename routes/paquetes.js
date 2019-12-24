@@ -38,7 +38,7 @@ app.post('/', (req, res) => {
 	var paquete = new Paquete({
 		nombre: body.nombre,
 		servicios: body.servicios,
-		total: body.total,
+		precio: body.precio,
 	});
 
 	paquete.save((err, paqueteGuardado) => {
